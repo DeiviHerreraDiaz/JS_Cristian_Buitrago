@@ -1,0 +1,21 @@
+{
+  "name": "async2687386",
+  "type": "commonjs",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "node async_call",
+    "dev2": "node async_promise",
+    "dev3": "node async_await"
+
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^1.5.1",
+    "needle": "^3.2.0",
+    "request": "^2.88.2"
+  }
+}

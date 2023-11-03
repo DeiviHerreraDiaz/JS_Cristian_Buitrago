@@ -1,6 +1,15 @@
 const express = require('express')
 const dotenv = require('dotenv')
 const colors = require('colors')
+const conectarDB = require('./config/db')
+
+// Dependencias de rutas
+
+const bootcampRoutes = require('./Controller/bootcampRoutes')
+const coursesRoutes = require('./Controller/coursesRoutes')
+const reviewspRoutes = require('./Controller/reviewsRoutes')
+const usersRoutes = require('./Controller/usersRoutes')
+
 
 //Vincular en archivo .env
 
@@ -8,9 +17,29 @@ dotenv.config(
     { 'path': './config/.env' }
 )
 
+// CONECTAR A BASE DE DATOS MONGO
+conectarDB()
 
 // Construir objeto app
-app = express()
+const app = express()
+
+app.use(express.json())
+
+// Conectar las rutas al objeto 
+
+app.use('/api/v1/devcamp/bootcamps',
+        bootcampRoutes)
+
+app.use('/api/v1/devcamp/courses',
+         coursesRoutes)
+        
+app.use('/api/v1/devcamp/reviews',
+         reviewspRoutes)
+
+app.use('/api/v1/devcamp/users',
+         usersRoutes)
+
+
 
 // Rutas de prueba
 // app.get('/prueba', (request, response) => {
@@ -28,7 +57,7 @@ app = express()
 app.get('/bootcamps', (req, resp) =>{
     resp.json({
         success: true,
-        msg: "Aqui se mostrara todos los bootcamps "
+        msg: "Aqui se mostrara todos los bootcamps"
     })
 })
 

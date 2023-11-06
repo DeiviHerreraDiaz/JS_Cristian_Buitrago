@@ -21,8 +21,9 @@ const BootcampSchema = new mongoose.Schema(
             type: [ String ],
             enum: ["Backend", "Frontend", "Devops", "AI"]
         },
-        createdAt: {
-            type: Date
+        userReference: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'User'
         }
     }
 )

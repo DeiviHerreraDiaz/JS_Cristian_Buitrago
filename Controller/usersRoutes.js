@@ -1,40 +1,58 @@
 const express = require('express')
-
+const userModel = require('../models/userModel')
 const router = express.Router()
 
-router.get('/', (req, resp) =>{
+router.get('/', async (req, resp) =>{
+
+    const users = await userModel.find()
+
     resp.json({
         success: true,
-        msg: "Aqui se mostrara todos los usuarios"
+        data: users
     })
 })
 
-router.get('/:id', (req, resp) =>{
+router.get('/:id', async (req, resp) =>{
+    
+    userId = req.params.id
+    const user = await userModel.findById(userId)
+
     resp.json({
         success: true,
-        msg: `Aqui se mostrara el usuario cuyo id es ${req.params.id}` 
+        data: user 
     })
 })
 
-router.post('/', (request, response) => {
+router.post('/', async (request, response) => {
+
+    const newUser = await userModel.create(request.body)
 
     response.json({
         success: true,
-        msg: "Aqui se creara un usuario"
+        data: newUser
     })
 })
 
-router.put('/:id', (req, resp) =>{
+router.put('/:id', async (req, resp) =>{
+
+    userId = req.params.id
+
+    const updateUser = await userModel.findByIdAndUpdate(userId, req.body, {new: true})
+
     resp.json({
         success: true,
-        msg: `Aqui se editara el usuario con id: ${req.params.id}` 
+        data: updateUser
     })
 })
 
-router.delete('/:id', (req, resp) =>{
+router.delete('/:id', async (req, resp) =>{
+
+    userId = req.params.id
+    const deleteUser = await userModel.findByIdAndDelete(userId)
+
     resp.json({
         success: true,
-        msg: `Aqui se eliminara el usuario con id: ${req.params.id}` 
+        data: deleteUser 
     })
 })
 

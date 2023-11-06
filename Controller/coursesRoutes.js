@@ -1,53 +1,56 @@
 const express = require('express')
-
-// Definir un ruteador
+const courseModel = require('../models/courseModel')
 const router = express.Router()
 
+router.get('/', async (req, resp) =>{
 
-// 1
+    const courses = await courseModel.find()
 
-router.get('/', (req, resp) =>{
     resp.json({
         success: true,
-        msg: "Aqui se mostrara todos los cursos"
+        data: courses
     })
 })
 
-// 2
+router.get('/:id', async (req, resp) =>{
 
-router.get('/:id', (req, resp) =>{
+    couseId = req.params.id
+    const course = await courseModel.findById(couseId)
     resp.json({
         success: true,
-        msg: `Aqui se mostrara el curso con id: ${req.params.id}` 
+       data: course
     })
 })
 
-// 3
+router.post('/', async (request, response) => {
 
-router.post('/', (request, response) => {
+    const newCourse = await courseModel.create(request.body)
 
     response.json({
         success: true,
-        msg: "Aqui se creara un curso"
+        data: newCourse
     })
 })
 
-//  4
+router.put('/:id', async (req, resp) =>{
 
-router.put('/:id', (req, resp) =>{
+    const courseId = req.params.id
+    const updateCourse = await courseModel.findByIdAndUpdate(courseId, req.body, {new: true})
+
     resp.json({
         success: true,
-        msg: `Aqui se editara una curso con id: ${req.params.id}` 
+        data: updateCourse
     })
 })
 
+router.delete('/:id', async (req, resp) =>{
 
-// 5
+    courseId = req.params.id
+    const deleteCourse = await courseModel.findByIdAndDelete(courseId)
 
-router.delete('/:id', (req, resp) =>{
     resp.json({
         success: true,
-        msg: `Aqui se eliminara un curso con id: ${req.params.id}` 
+        data: deleteCourse
     })
 })
 

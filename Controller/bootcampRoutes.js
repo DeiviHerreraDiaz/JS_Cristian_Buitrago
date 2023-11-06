@@ -1,14 +1,8 @@
 const express = require('express')
 const BootcampModel = require('../models/bootcampModel')
-
-// Definir un ruteador
 const router = express.Router()
 
-// 1
-
 router.get('/', async (req, resp) =>{
-    
-    // Utilizar el modelo para seleccionar todos los bootcamps que hay en la base de datos 
 
    const bootcamps = await BootcampModel.find()
 
@@ -17,8 +11,6 @@ router.get('/', async (req, resp) =>{
         data: bootcamps
     })
 })
-
-// 2
 
 router.get('/:id', async (req, resp) =>{
 
@@ -31,11 +23,7 @@ router.get('/:id', async (req, resp) =>{
     })
 })
 
-// 3
-
 router.post('/', async (request, response) => {
-
-    // El nuevo bootcamp vendrá al servidor a traves del body del cliente 
 
     const newBootcamp = await BootcampModel.create(request.body)
 
@@ -45,13 +33,11 @@ router.post('/', async (request, response) => {
     })
 })
 
-//  4
-
 router.put('/:id', async (request, response) => {
 
     // El nuevo bootcamp vendrá al servidor a traves del body del cliente 
 
-    const bootcampId = request.params.id
+    bootcampId = request.params.id
     const updateBootcamp = await BootcampModel.findByIdAndUpdate(bootcampId, request.body, {new: true})
 
     response.json({
@@ -59,9 +45,6 @@ router.put('/:id', async (request, response) => {
         data: updateBootcamp
     })
 })
-
-
-// 5
 
 router.delete('/:id', async (req, resp) =>{
 

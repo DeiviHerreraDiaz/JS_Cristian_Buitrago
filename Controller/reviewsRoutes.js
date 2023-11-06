@@ -1,52 +1,58 @@
 const express = require('express')
-
-// Definir un ruteador
+const reviewModel = require('../models/reviewModel')
 const router = express.Router()
 
-// 1
+router.get('/', async (req, resp) =>{
 
-router.get('/', (req, resp) =>{
+    const reviews = await reviewModel.find()
+
     resp.json({
         success: true,
-        msg: "Aqui se mostrara todas las review"
+        data: reviews
     })
 })
 
-// 2
+router.get('/:id', async (req, resp) =>{
 
-router.get('/:id', (req, resp) =>{
+    bootcampId = req.params.id
+
+    const reviews = await reviewModel.find({ bootcampReference: bootcampId }).populate('bootcampReference');
+
     resp.json({
         success: true,
-        msg: `Aqui se mostrara la review cuya id es ${req.params.id}` 
+        data: reviews
     })
 })
 
-// 3
+router.post('/', async (request, response) => {
 
-router.post('/', (request, response) => {
+    const newReview = await reviewModel.create(request.body)
 
     response.json({
         success: true,
-        msg: "Aqui se creara una review"
+        data: newReview
     })
 })
 
-//  4
-
-router.put('/:id', (req, resp) =>{
+router.put('/:id', async  (req, resp) =>{
+    
+    reviewId = req.params.id
+    const updateReview = await reviewModel.findByIdAndUpdate(reviewId, req.body, {new: true})
+    
     resp.json({
         success: true,
-        msg: `Aqui se editara una review con id: ${req.params.id}` 
+        data: updateReview
     })
 })
 
+router.delete('/:id', async (req, resp) =>{
 
-// 5
+    reviewId = req.params.id
+    const deleteReview = await reviewModel.findByIdAndDelete(reviewId)
 
-router.delete('/:id', (req, resp) =>{
     resp.json({
         success: true,
-        msg: `Aqui se eliminara la review con id: ${req.params.id}` 
+        data: deleteReview
     })
 })
 

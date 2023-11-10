@@ -1,60 +1,218 @@
 const express = require('express')
 const BootcampModel = require('../models/bootcampModel')
+const { default: mongoose } = require('mongoose')
 const router = express.Router()
 
 router.get('/', async (req, resp) =>{
 
-   const bootcamps = await BootcampModel.find()
+    try {
 
-    resp.json({
-        success: true,
-        data: bootcamps
-    })
+        const bootcamps = await BootcampModel.find()
+        
+        if (bootcamps.length > 0) {
+        
+            resp.
+            status(200).
+            json({
+            success: true,
+            data: bootcamps
+        })
+        } else{
+            resp.
+            status(400).
+            json({
+                success: false, 
+                message: 'No hay bootcamps'
+            })
+        }
+        
+    } catch (error) {
+        resp.status(400)
+        .json({
+            success: false,
+            message: error.message
+        })
+    }
+   
 })
 
 router.get('/:id', async (req, resp) =>{
 
-    bootcampId = req.params.id
-    const bootcamp = await BootcampModel.findById(bootcampId)
+    try {
+        bootcampId = req.params.id
 
-    resp.json({
-        success: true,
-        data: bootcamp        
-    })
+        if(!mongoose.Types.ObjectId.isValid(bootcampId)){
+            resp.
+            status(500)
+            .json({
+
+                success: false, 
+                message: "Identificador invalido"
+            })
+
+        } else {
+            const bootcamp = await BootcampModel.findById(bootcampId)
+    
+            if (bootcamp){
+    
+                resp.
+                status(200).
+                json({
+                success: true,
+                data: bootcamp        
+            })
+    
+            } else {
+    
+                resp.
+                status(400).
+                json({
+    
+                    success: false, 
+                    message: `No hay bootcamp con el id: ${bootcampId}`
+    
+                })
+    
+            }
+        }
+
+    } catch (error) {
+        resp.status(400)
+        .json({
+            success: false,
+            message: error.message
+        })
+    }
+
+
 })
 
 router.post('/', async (request, response) => {
 
+    try {
+        
     const newBootcamp = await BootcampModel.create(request.body)
 
-    response.json({
+    response.
+        status(201).
+        json({
         success: true,
         data: newBootcamp
     })
+
+    } catch (error) {
+        
+        response.status(400)
+        .json({
+
+            success: false, 
+            message: error.message
+
+        })
+
+    }
+
+    
 })
 
 router.put('/:id', async (request, response) => {
 
-    // El nuevo bootcamp vendrá al servidor a traves del body del cliente 
+    try {
+        
+        const bootcampId = request.params.id
 
-    bootcampId = request.params.id
-    const updateBootcamp = await BootcampModel.findByIdAndUpdate(bootcampId, request.body, {new: true})
+        if(!mongoose.Types.ObjectId.isValid(bootcampId)){
+            
+            response.status(500).json({
+                success: false,
+                message: "Identificador invalido"
+            })
+           
+        } else {
 
-    response.json({
-        success: true,
-        data: updateBootcamp
-    })
+            const updateBootcamp = await BootcampModel.findByIdAndUpdate(bootcampId, request.body, {new: true})
+        
+            if(updateBootcamp){
+                response.status(200).
+                json({
+                success: true,
+                data: updateBootcamp
+            })
+
+            } else {
+                response.
+                status(400).
+                json({
+    
+                    success: false, 
+                    message: `No hay bootcamp con el id: ${bootcampId}`
+    
+                })
+            }
+
+        }
+
+    } catch (error) {
+     
+        response.status(400).json({
+
+            success: false, 
+            message: error.message
+        })
+    }
+
+
+  
 })
 
 router.delete('/:id', async (req, resp) =>{
 
-    const bootcampId = req.params.id
-    const deleteBootcamp = await BootcampModel.findByIdAndDelete(bootcampId)
+    
 
-    resp.json({
-        success: true,
-        data: deleteBootcamp 
-    })
+    try {
+
+        const bootcampId = req.params.id
+
+
+        if(!mongoose.Types.ObjectId.isValid(bootcampId)){
+            
+            resp.status(500).json({
+                success: false,
+                message: "Identificador invalido"
+            })
+
+            } else {
+
+                const deleteBootcamp = await BootcampModel.findByIdAndDelete(bootcampId)
+
+                if(deleteBootcamp){
+                    resp.status(200).json({
+                        success: true,
+                        data: deleteBootcamp 
+                    })
+                } else{
+                    
+                    resp.status(400).json({
+                        success: false, 
+                        message: `No hay bootcamp con el id: ${bootcampId}`
+
+                    })
+                }
+            }
+    } catch (error) {
+        resp.status(400).json({
+
+            success: false, 
+            message: error.message
+
+        })
+    }
+
+
+    
+    
+
+   
 })
 
 module.exports = router

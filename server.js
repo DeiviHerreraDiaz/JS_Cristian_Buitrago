@@ -2,6 +2,8 @@ const express = require('express')
 const dotenv = require('dotenv')
 const colors = require('colors')
 const conectarDB = require('./config/db')
+const cookieParser = require('cookie-parser')
+
 
 // Dependencias de rutas
 
@@ -24,6 +26,8 @@ const app = express()
 
 app.use(express.json())
 
+app.use(cookieParser())
+
 // Conectar las rutas al objeto 
 
 app.use('/api/v1/devcamp/bootcamps',
@@ -35,7 +39,7 @@ app.use('/api/v1/devcamp/courses',
 app.use('/api/v1/devcamp/reviews',
          reviewspRoutes)
 
-app.use('/api/v1/devcamp/users',
+app.use('/api/v1/devcamp/auth',
          usersRoutes)
 
 app.listen( process.env.PUERTO , () => {

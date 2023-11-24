@@ -3,6 +3,9 @@ const BootcampModel = require('../models/bootcampModel')
 const { default: mongoose } = require('mongoose')
 const router = express.Router()
 
+// Dependencias al middleware
+const {protect, authorize} = require ('../middleware/auth')
+
 router.get('/', async (req, resp) =>{
 
     try {
@@ -87,7 +90,7 @@ router.get('/:id', async (req, resp) =>{
 
 })
 
-router.post('/', async (request, response) => {
+router.post('/', protect, async (request, response) => {
 
     try {
         
